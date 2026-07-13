@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ══ SEO ══ -->
+<title>DriverPro — Rádio, mapa ao vivo e controle financeiro para motoristas de aplicativo</title>
+<meta name="description" content="O ecossistema do motorista de aplicativo brasileiro: rádio comunicador (PTT), mapa com os companheiros ao vivo, botão de emergência, repasse de corridas, agenda de clientes e inteligência financeira. Teste no navegador ou baixe para Android.">
+<meta name="keywords" content="motorista de aplicativo, uber, 99, indrive, rádio para motoristas, PTT, canaleta, controle financeiro motorista, lucro líquido uber, custo por km, app para motorista">
+<link rel="canonical" href="https://driver-pro.com.br/">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph (WhatsApp/redes mostram esse cartão ao compartilhar o link) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://driver-pro.com.br/">
+<meta property="og:title" content="DriverPro — feito para quem vive do volante">
+<meta property="og:description" content="Rádio entre motoristas, mapa ao vivo, botão de emergência e controle financeiro de verdade. Teste no navegador ou baixe para Android.">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="DriverPro">
+<meta property="og:image" content="https://driver-pro.com.br/logoOficial.png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DriverPro — feito para quem vive do volante">
+<meta name="twitter:description" content="Rádio entre motoristas, mapa ao vivo, emergência e controle financeiro. Teste no navegador ou baixe para Android.">
+<meta name="twitter:image" content="https://driver-pro.com.br/logoOficial.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "DriverPro",
+  "operatingSystem": "ANDROID, WEB",
+  "applicationCategory": "BusinessApplication",
+  "description": "Ecossistema para motoristas de aplicativo: rádio PTT, mapa ao vivo, botão de emergência, repasse de corridas, agenda de clientes e inteligência financeira.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+  "inLanguage": "pt-BR",
+  "url": "https://driver-pro.com.br/"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="logoOficial.png" type="image/png">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080a;--panel:#111114;--panel2:#16161b;--panel3:#1c1c22;
+  --seam:rgba(255,255,255,0.07);--seam2:rgba(255,255,255,0.14);
+  --yellow:#f5c518;--yellow-soft:rgba(245,197,24,0.10);--yellow-line:rgba(245,197,24,0.30);
+  --lime:#a3e635;--red:#ef4444;--wpp:#25d366;
+  --muted:#6a6a74;--muted2:#9a9aa6;--text:#eceae3;
+  --fh:'Rajdhani',sans-serif;--fm:'Share Tech Mono',monospace;--fb:'DM Sans',sans-serif;
+  --maxw:1120px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* fundo: grade sutil + brilho quente no topo */
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,0.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.016) 1px,transparent 1px);
+  background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000,transparent 75%);mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000,transparent 75%)}
+.bg-glow{position:fixed;top:-260px;left:50%;transform:translateX(-50%);width:900px;height:600px;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(245,197,24,0.08),transparent 62%)}
+
+.wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+/* ── botões ── */
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--fh);font-weight:600;letter-spacing:.6px;text-decoration:none;
+  border-radius:10px;padding:12px 24px;font-size:1.02rem;line-height:1;transition:transform .15s,box-shadow .2s,background .2s,border-color .2s;cursor:pointer;border:1px solid transparent;white-space:nowrap}
+.btn svg{width:18px;height:18px;flex-shrink:0}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--yellow);color:#161200;box-shadow:0 6px 26px rgba(245,197,24,.22)}
+.btn-primary:hover{box-shadow:0 10px 34px rgba(245,197,24,.32)}
+.btn-ghost{background:rgba(255,255,255,.03);color:var(--text);border-color:var(--seam2)}
+.btn-ghost:hover{border-color:var(--yellow-line);background:var(--yellow-soft)}
+.btn-wpp{background:var(--wpp);color:#052912}
+.btn-sm{padding:9px 16px;font-size:.9rem}
+
+/* ── header ── */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(8,8,10,.72);border-bottom:1px solid var(--seam)}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;max-width:var(--maxw);margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--fh);font-weight:700;font-size:1.35rem;letter-spacing:1.5px;color:var(--text)}
+.logo img{width:26px;height:26px;object-fit:contain}
+.logo span{color:var(--yellow)}
+.nav-actions{display:flex;gap:10px;align-items:center}
+
+/* ── hero ── */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;padding:72px 0 64px}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:.76rem;color:var(--lime);
+  border:1px solid rgba(163,230,53,.32);border-radius:999px;padding:5px 14px;margin-bottom:26px;background:rgba(163,230,53,.05);letter-spacing:.5px}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime)}
+h1{font-family:var(--fh);font-weight:700;font-size:clamp(2.5rem,6vw,4.4rem);line-height:1.02;letter-spacing:.5px}
+h1 em{font-style:normal;color:var(--yellow)}
+.hero .sub{color:var(--muted2);font-size:clamp(1.05rem,1.6vw,1.2rem);max-width:560px;margin:20px 0 32px}
+.hero .sub strong{color:var(--text);font-weight:600}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.cta-note{font-family:var(--fm);font-size:.76rem;color:var(--muted2);margin-top:18px;line-height:1.7}
+.cta-note b{color:var(--muted2);font-weight:400}
+
+/* moldura do print no hero */
+.hero-shot{justify-self:center;position:relative}
+.phone{width:min(300px,74vw);border-radius:34px;border:1px solid var(--seam2);background:linear-gradient(160deg,#1a1a20,#0d0d10);
+  padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(245,197,24,.06)}
+.phone img{width:100%;display:block;border-radius:24px}
+.hero-shot::after{content:"";position:absolute;inset:-40px -30px;z-index:-1;
+  background:radial-gradient(circle at 60% 30%,rgba(245,197,24,.12),transparent 60%)}
+
+/* ── seções ── */
+section{padding:64px 0;position:relative}
+.eyebrow{font-family:var(--fm);font-size:.78rem;color:var(--yellow);letter-spacing:1.5px;margin-bottom:12px}
+h2{font-family:var(--fh);font-weight:700;font-size:clamp(1.7rem,3.6vw,2.5rem);line-height:1.1;letter-spacing:.5px}
+.lead{color:var(--muted2);max-width:640px;margin-top:12px;font-size:1.05rem}
+.section-head{margin-bottom:40px}
+
+/* ── grade de recursos ── */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:linear-gradient(180deg,var(--panel),#0e0e11);border:1px solid var(--seam);border-radius:16px;padding:26px;
+  transition:border-color .2s,transform .2s,background .2s}
+.card:hover{border-color:var(--yellow-line);transform:translateY(-4px)}
+.card .ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  background:var(--yellow-soft);border:1px solid var(--yellow-line);color:var(--yellow)}
+.card .ico svg{width:23px;height:23px}
+.card h3{font-family:var(--fh);font-size:1.25rem;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
+.card p{color:var(--muted2);font-size:.96rem}
+
+/* ── dois caminhos (sem medo) ── */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.path{position:relative;border:1px solid var(--seam);border-radius:18px;padding:30px;background:var(--panel)}
+.path.web{border-color:var(--yellow-line);background:linear-gradient(180deg,var(--yellow-soft),var(--panel))}
+.path .tagline{font-family:var(--fm);font-size:.72rem;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px}
+.path.web .tagline{color:var(--yellow)}
+.path h3{font-family:var(--fh);font-weight:700;font-size:1.5rem;letter-spacing:.5px;margin-bottom:8px}
+.path p{color:var(--muted2);font-size:.98rem;margin-bottom:20px}
+.path ul{list-style:none;margin-bottom:24px;display:grid;gap:9px}
+.path li{display:flex;gap:10px;align-items:flex-start;color:var(--muted2);font-size:.94rem}
+.path li svg{width:17px;height:17px;color:var(--yellow);flex-shrink:0;margin-top:3px}
+
+/* ── passos ── */
+.passos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:passo}
+.passo{background:var(--panel2);border:1px solid var(--seam);border-radius:16px;padding:26px;position:relative}
+.passo::before{counter-increment:passo;content:"0" counter(passo);font-family:var(--fh);font-weight:700;color:var(--yellow);
+  font-size:2rem;line-height:1;display:block;margin-bottom:14px;opacity:.9}
+.passo h3{font-family:var(--fh);font-size:1.2rem;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
+.passo p{color:var(--muted2);font-size:.95rem}
+.passo strong{color:var(--text)}
+
+/* ── líderes (faixa destaque) ── */
+.leaders{border:1px solid var(--yellow-line);border-radius:20px;padding:38px 40px;
+  background:radial-gradient(ellipse 60% 120% at 100% 0%,rgba(245,197,24,.10),transparent 60%),var(--panel);
+  display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
+.leaders .txt{flex:1;min-width:280px}
+.leaders .eyebrow{margin-bottom:8px}
+.leaders h3{font-family:var(--fh);font-weight:700;font-size:clamp(1.4rem,2.6vw,2rem);letter-spacing:.5px;margin-bottom:10px}
+.leaders p{color:var(--muted2);max-width:560px}
+
+/* ── prova (dois prints) ── */
+.proof{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+.proof-shots{display:flex;gap:16px;justify-content:center}
+.proof-shots .phone{width:min(210px,42vw);border-radius:26px;padding:9px}
+.proof-shots .phone img{border-radius:18px}
+.proof-shots .phone:nth-child(2){margin-top:34px}
+
+/* ── formulário ── */
+form{background:var(--panel);border:1px solid var(--seam);border-radius:18px;padding:32px;max-width:600px;margin:0 auto}
+form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){form .row{grid-template-columns:1fr}}
+label{font-family:var(--fm);font-size:.74rem;color:var(--muted2);display:block;margin:16px 0 7px;letter-spacing:.5px}
+input,select{width:100%;background:var(--bg);border:1px solid var(--seam2);border-radius:10px;color:var(--text);padding:13px 15px;font-family:var(--fb);font-size:1rem;transition:border-color .2s}
+input:focus,select:focus{outline:none;border-color:var(--yellow)}
+input::placeholder{color:var(--muted)}
+#form-msg{font-family:var(--fm);font-size:.85rem;margin-top:16px;min-height:1.2em}
+#form-msg.ok{color:var(--lime)} #form-msg.erro{color:var(--red)}
+
+/* ── faq ── */
+.faq-wrap{max-width:760px;margin:0 auto}
+details{background:var(--panel);border:1px solid var(--seam);border-radius:12px;padding:18px 22px;margin-bottom:11px;transition:border-color .2s}
+details[open]{border-color:var(--yellow-line)}
+summary{font-family:var(--fh);font-weight:600;font-size:1.1rem;cursor:pointer;letter-spacing:.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--fm);color:var(--yellow);font-size:1.4rem;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted2);margin-top:12px;font-size:.97rem}
+details a{color:var(--yellow)}
+
+/* ── footer ── */
+footer{border-top:1px solid var(--seam);padding:40px 0;margin-top:48px;text-align:center;color:var(--muted2);font-size:.88rem}
+footer .logo{justify-content:center;margin-bottom:14px;font-size:1.15rem}
+footer a{color:var(--muted2)}
+footer .fine{font-family:var(--fm);font-size:.74rem;color:var(--muted);margin-top:10px}
+
+@media(max-width:860px){
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr;text-align:center;padding:52px 0 48px;gap:36px}
+  .hero .sub{margin-left:auto;margin-right:auto}
+  .cta-row{justify-content:center}
+  .hero-shot{order:-1}
+  .grid,.passos{grid-template-columns:1fr}
+  .paths,.proof{grid-template-columns:1fr}
+  .proof-shots .phone:nth-child(2){margin-top:0}
+  .nav-actions .hide-sm{display:none}
+}
+
+/* Widget Flutuante do WhatsApp */
+.wpp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  background: var(--wpp);
+  color: #fff;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+  transition: transform .2s, box-shadow .2s;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+.wpp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 26px rgba(37,211,102,0.45);
+}
+.wpp-float svg {
+  width: 28px;
+  height: 28px;
+}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--muted2);text-decoration:none;font-family:var(--fh);font-weight:600;font-size:1.02rem;letter-spacing:.5px;transition:color .2s}
+.nav-links a:hover{color:var(--yellow)}
+
+/* Estilo do reprodutor de áudio PTT */
+.audio-demo-box {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--seam);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn-play-radio {
+  background: rgba(245,197,24,0.06);
+  border: 1px solid var(--yellow-line);
+  color: var(--yellow);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: var(--fh);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .2s, transform .1s;
+}
+.btn-play-radio:hover {
+  background: var(--yellow-soft);
+  transform: scale(1.02);
+}
+.radio-status {
+  font-family: var(--fm);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- Ícones (Lucide, MIT) embutidos como símbolos SVG -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-radio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/>
+  </symbol>
+  <symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+  </symbol>
+  <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="9.17" y1="14.83" x2="4.93" y2="19.07"/>
+  </symbol>
+  <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>
+  </symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/>
+  </symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 6 9 17l-5-5"/>
+  </symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 0 0 20 15.3 15.3 0 0 0 0-20"/><path d="M2 12h20"/>
+  </symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+  </symbol>
+</svg>
+
+<header>
+  <nav class="nav">
+    <div class="logo">
+      <img src="logoOficial.png" alt="DriverPro">
+      DRIVER<span>PRO</span>
+    </div>
+    <div class="nav-links">
+      <a href="#canaleta">Monitor de Lucro</a>
+      <a href="#comecar">Rádio & Segurança</a>
+      <a href="#lideres">Criar Canaleta</a>
+      <a href="#faq">Perguntas Comuns</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-ghost btn-sm hide-sm" href="https://app.driver-pro.com.br/login">Entrar</a>
+      <a class="btn btn-primary btn-sm" href="https://app.driver-pro.com.br/register"><svg><use href="#i-globe"/></svg>Testar agora</a>
+    </div>
+  </nav>
+</header>
+
+<div class="wrap">
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="badge"><span class="dot"></span>BETA ABERTO · VERSÃO 1.7 NO AR</span>
+    <h1>Rodou o dia inteiro.<br><em>Sobrou quanto?</em></h1>
+    <p class="sub">O DriverPro mostra seu <strong>lucro de verdade</strong> em cada corrida e conecta você aos parceiros de confiança. Use o monitor de corridas em tempo real no app para aceitar só o que vale a pena, controle seus custos e fale com seus parceiros via rádio PTT e mapa ao vivo.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://app.driver-pro.com.br/register"><svg><use href="#i-globe"/></svg>Começar no Navegador</a>
+      <a class="btn btn-ghost" href="https://driver-pro.com.br/download/driverpro-release.apk" id="btn-download-release"><svg><use href="#i-download"/></svg>Baixar para Android</a>
+    </div>
+    <p class="cta-note">
+      <b>Sem instalar nada:</b> crie a conta no navegador e já use finanças e mapa ao vivo. O aplicativo Android é necessário para o rádio em segundo plano.<br>
+      v1.7 · arquivo seguro e verificado · grátis durante o beta · sem cartão · feito no Brasil
+    </p>
+  </div>
+  <div class="hero-shot">
+    <div class="phone"><img src="screens/app-canaleta.png" alt="Tela da Canaleta no app DriverPro: mapa ao vivo, presença e rádio"></div>
+  </div>
+</section>
+
+<!-- ══ RECURSOS ══ -->
+<section id="canaleta">
+  <div class="section-head">
+    <p class="eyebrow">PILOTO AUTOMÁTICO DE RUA</p>
+    <h2>Decida na hora e rode com apoio</h2>
+    <p class="lead">Ferramentas de precisão para você controlar seus ganhos sozinho no volante, com a tranquilidade de estar conectado ao seu grupo de confiança.</p>
+  </div>
+  <div class="grid">
+    <!-- Card 1: Monitor de Corridas (Individual) -->
+    <div class="card">
+      <div class="card-top">
+        <div class="ico"><svg><use href="#i-route"/></svg></div>
+        <h3>Monitor de Corridas</h3>
+        <p>Decida na hora. Nosso monitor inteligente lê as ofertas da Uber/99 e exibe na tela o ganho líquido real antes de você aceitar.</p>
+      </div>
+    </div>
+    
+    <!-- Card 2: Financeiro Real (Individual) -->
+    <div class="card">
+      <div class="card-top">
+        <div class="ico"><svg><use href="#i-chart"/></svg></div>
+        <h3>Financeiro no Bolso</h3>
+        <p>Esqueça planilhas. Registre combustível, desgaste e depreciação automática ou simplificadamente para ver seu lucro líquido real.</p>
+      </div>
+    </div>
+    
+    <!-- Card 3: Rádio PTT (Grupo) -->
+    <div class="card">
+      <div class="card-top">
+        <div class="ico"><svg><use href="#i-radio"/></svg></div>
+        <h3>Rádio PTT</h3>
+        <p>Fale direto em segundo plano. Mantenha contato rápido com seus parceiros enquanto navega no GPS ou no app de corrida.</p>
+      </div>
+      <div class="audio-demo-box">
+        <button class="btn-play-radio" id="btn-play-radio" type="button">▶ Ouvir Rádio</button>
+        <span class="radio-status" id="radio-status">[PTT_OFFLINE]</span>
+        <audio id="audio-radio-demo" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav" preload="auto"></audio>
+      </div>
+    </div>
+    
+    <!-- Card 4: Mapa ao Vivo (Grupo) -->
+    <div class="card">
+      <div class="card-top">
+        <div class="ico"><svg><use href="#i-map"/></svg></div>
+        <h3>Mapa da Praça</h3>
+        <p>Saiba onde seus amigos estão rodando. Acompanhe a presença do seu grupo em tempo real no nosso mapa integrado.</p>
+      </div>
+    </div>
+    
+    <!-- Card 5: Apoio na Rua (Emergência) -->
+    <div class="card">
+      <div class="card-top">
+        <div class="ico"><svg><use href="#i-help"/></svg></div>
+        <h3>Emergência & Apoio</h3>
+        <p>Teve uma quebra ou situação suspeita? Dispare o alerta e mostre sua posição apenas para o grupo de confiança te resgatar.</p>
+      </div>
+    </div>
+    
+    <!-- Card 6: Agenda e Particulares (Profissional) -->
+    <div class="card">
+      <div class="card-top">
+        <div class="ico"><svg><use href="#i-calendar"/></svg></div>
+        <h3>Agenda de Particulares</h3>
+        <p>Gerencie seus clientes particulares e organize sua escala com o grupo, ganhando independência das taxas dos apps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DOIS CAMINHOS (sem medo) ══ -->
+<section id="comecar">
+  <div class="section-head">
+    <p class="eyebrow">COMECE DO SEU JEITO</p>
+    <h2>Dois caminhos, a mesma conta</h2>
+    <p class="lead">Com receio de instalar? Comece pelo navegador em segundos. Quando quiser rodar
+    na rua com tudo na palma da mão, o app Android usa exatamente a mesma conta.</p>
+  </div>
+  <div class="paths">
+    <div class="path web">
+      <p class="tagline">SEM INSTALAR NADA · RECOMENDADO PARA COMEÇAR</p>
+      <h3>Pelo navegador</h3>
+      <p>Abre, cria a conta e já está dentro. Nada para baixar, nada para autorizar.</p>
+      <ul>
+        <li><svg><use href="#i-check"/></svg>Finanças e visualização do mapa</li>
+        <li><svg><use href="#i-check"/></svg>Funciona em qualquer aparelho com internet</li>
+        <li><svg><use href="#i-check"/></svg>Zero download, zero dor de cabeça</li>
+      </ul>
+      <a class="btn btn-primary" href="https://app.driver-pro.com.br/register"><svg><use href="#i-globe"/></svg>Abrir no navegador</a>
+    </div>
+    <div class="path">
+      <p class="tagline">PARA QUEM JÁ ESTÁ NA PISTA</p>
+      <h3>App Android</h3>
+      <p>A experiência completa para o dia a dia rodando: rápido, em tela cheia e sempre à mão.</p>
+      <ul>
+        <li><svg><use href="#i-check"/></svg>Rádio em segundo plano com o Waze/Uber aberto (exclusivo do app)</li>
+        <li><svg><use href="#i-check"/></svg>GPS e desempenho otimizados para a rua</li>
+        <li><svg><use href="#i-check"/></svg>A mesma conta do navegador</li>
+      </ul>
+      <a class="btn btn-ghost" href="https://driver-pro.com.br/download/driverpro-release.apk"><svg><use href="#i-download"/></svg>Baixar para Android</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROVA (prints reais) ══ -->
+<section id="prova">
+  <div class="proof">
+    <div class="proof-text">
+      <p class="eyebrow">PRODUTO REAL, NÃO PROMESSA</p>
+      <h2>Veja de perto</h2>
+      <p class="lead">Capturas do app em uso: a Canaleta com o mapa e o rádio, e o financeiro do dia
+      fechando a conta. É isso que você encontra hoje ao entrar.</p>
+    </div>
+    <div class="proof-shots">
+      <div class="phone"><img src="screens/app-canaleta.png" alt="Canaleta: mapa, presença e rádio"></div>
+      <div class="phone"><img src="screens/app-financas.png" alt="Finanças do dia: ganhos, gastos e lucro"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LÍDERES ══ -->
+<section id="lideres">
+  <div class="leaders">
+    <div class="txt">
+      <p class="eyebrow">PARA QUEM LIDERA UM GRUPO</p>
+      <h2>Sua canaleta merece mais que um grupo de zap</h2>
+      <p>Se você é referência da sua praça e cansou de administrar tudo por mensagem, a Canaleta
+      foi feita para você: mapa ao vivo do grupo, rádio com controle, botão de apoio e repasse —
+      com você decidindo quem entra e quem pode o quê. Preparamos uma apresentação só para líderes.</p>
+    </div>
+    <a class="btn btn-primary" href="https://driver-pro.com.br/parceiros/">Ver a apresentação<svg><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+
+<!-- ══ COMO ENTRAR ══ -->
+<section id="como">
+  <div class="section-head">
+    <p class="eyebrow">COMECE AGORA</p>
+    <h2>Em três passos</h2>
+    <p class="lead">Acesso aberto e gratuito — sem fila, sem esperar convite. Para conhecer antes de
+    instalar qualquer coisa, entre direto por <a href="https://app.driver-pro.com.br/register" style="color:var(--yellow)">app.driver-pro.com.br</a> — a conta é a mesma no navegador e no app.</p>
+  </div>
+  <div class="passos">
+    <div class="passo">
+      <h3>Entre ou baixe</h3>
+      <p>Comece pelo <strong>navegador</strong> em segundos, ou baixe o app Android aqui pelo site (o Android pede permissão para instalar — é só autorizar).</p>
+    </div>
+    <div class="passo">
+      <h3>Crie sua conta</h3>
+      <p>E-mail e senha, leva um minuto. Cadastre seu carro e pronto.</p>
+    </div>
+    <div class="passo">
+      <h3>Entre na canaleta</h3>
+      <p>Crie um grupo com seus parceiros de rua ou entre num grupo com convite. Liga o rádio e bom trabalho.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FORMULÁRIO ══ -->
+<section id="beta">
+  <div class="section-head" style="text-align:center">
+    <p class="eyebrow">PROGRAMA FUNDADOR</p>
+    <h2>Seja um dos fundadores da sua praça</h2>
+    <p class="lead" style="margin-left:auto;margin-right:auto">O app já é grátis e aberto — é só criar
+    sua conta. Quem entra nesta fase é <strong>fundador</strong>: quando os planos pagos chegarem, você
+    garante condição especial. Deixe seu e-mail para garantir sua condição e ser redirecionado para a criação de conta.</p>
+  </div>
+  <form id="waitlist-form">
+    <div class="row">
+      <div><label for="f-nome">NOME</label><input id="f-nome" name="name" maxlength="100" placeholder="Seu nome"></div>
+      <div><label for="f-email">E-MAIL *</label><input id="f-email" name="email" type="email" required placeholder="voce@exemplo.com"></div>
+    </div>
+    <div class="row">
+      <div><label for="f-fone">WHATSAPP</label><input id="f-fone" name="phone" maxlength="20" placeholder="(67) 9 9999-9999"></div>
+      <div><label for="f-cidade">CIDADE</label><input id="f-cidade" name="city" maxlength="100" placeholder="Campo Grande - MS"></div>
+    </div>
+    <label for="f-plataforma">VOCÊ RODA EM QUAL APP?</label>
+    <select id="f-plataforma" name="platform">
+      <option value="all">Vários / todos</option>
+      <option value="uber">Uber</option>
+      <option value="99">99</option>
+      <option value="indrive">InDrive</option>
+    </select>
+    <div style="margin-top:24px;text-align:center">
+      <button class="btn btn-primary" type="submit" id="f-enviar" style="width:100%;justify-content:center;padding:15px">Garantir Vaga & Criar Conta</button>
+    </div>
+    <p id="form-msg"></p>
+  </form>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section id="faq">
+  <div class="section-head" style="text-align:center">
+    <p class="eyebrow">DÚVIDAS</p>
+    <h2>Perguntas frequentes</h2>
+  </div>
+  <div class="faq-wrap">
+    <details><summary>É grátis?</summary>
+      <p>Sim, tudo liberado e sem cartão. Quem entra agora é fundador: quando lançarmos os planos pagos, você terá condição especial por ter chegado no começo.</p></details>
+    <details><summary>Preciso instalar para testar?</summary>
+      <p>Não. Entre em <a href="https://app.driver-pro.com.br/register">app.driver-pro.com.br</a>, crie a conta e use direto no navegador: finanças, rádio e mapa ao vivo. Se gostar, o app Android usa a mesma conta.</p></details>
+    <details><summary>Funciona no meu celular?</summary>
+      <p>Qualquer Android razoavelmente atual. iPhone ainda não tem app — mas dá para usar a versão web no navegador de qualquer aparelho.</p></details>
+    <details><summary>O rádio funciona com o app de corrida aberto?</summary>
+      <p>Sim. O rádio segue conectado em segundo plano com uma notificação fixa — você ouve e fala enquanto navega no Waze, Uber ou 99.</p></details>
+    <details><summary>Meus dados ficam seguros?</summary>
+      <p>Seus dados são seus: conexão criptografada (HTTPS/TLS) em todo o tráfego, servidores protegidos e ferramentas para exportar ou excluir sua conta quando quiser, como manda a LGPD.</p></details>
+    <details><summary>Já tenho um grupo — como levo todo mundo pro app?</summary>
+      <p>Melhor cenário. Veja a <a href="https://driver-pro.com.br/parceiros/">apresentação para líderes</a> e chame a gente no WhatsApp: ajudamos a criar sua canaleta e a instalar aparelho por aparelho, se precisar.</p></details>
+    <details><summary>Por que não está na Play Store ainda?</summary>
+      <p>Ainda estamos em beta, ajustando os últimos detalhes antes de publicar. Enquanto isso o acesso é aberto: use direto no navegador ou instale o Android pelo site. A publicação na Play Store vem na sequência.</p></details>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><img src="logoOficial.png" alt="DriverPro">DRIVER<span>PRO</span></div>
+    <p>Feito por quem entende a rua.</p>
+    <p style="margin-top:6px"><a href="mailto:contato@driver-pro.com.br">contato@driver-pro.com.br</a></p>
+    <p class="fine">© 2026 DriverPro · Campo Grande, MS · Brasil</p>
+  </div>
+</footer>
+
+<a href="#" class="wpp-float" id="btn-wpp-float" style="display:none" target="_blank" aria-label="Chamar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.458 5.704 1.459h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
+
+<script>
+// WhatsApp do beta: preencha com DDI+DDD+numero (ex.: 5567999990000) para exibir o botao.
+const WHATSAPP_NUMERO = "5567991797871";
+if (WHATSAPP_NUMERO) {
+  const b = document.getElementById("btn-wpp-float");
+  b.href = "https://wa.me/" + WHATSAPP_NUMERO + "?text=" +
+    encodeURIComponent("Olá! Vi o site do DriverPro e quero ser fundador / começar a usar.");
+  b.style.display = "flex";
+}
+
+// Player interativo do áudio de demonstração do PTT
+const btnPlayRadio = document.getElementById("btn-play-radio");
+if (btnPlayRadio) {
+  btnPlayRadio.addEventListener("click", () => {
+    const audio = document.getElementById("audio-radio-demo");
+    const status = document.getElementById("radio-status");
+    if (audio.paused) {
+      status.textContent = "[PTT_TRANSMITTING...]";
+      status.style.color = "var(--yellow)";
+      btnPlayRadio.textContent = "⏹ Parar";
+      audio.play();
+      audio.onended = () => {
+        status.textContent = "[PTT_ROGER_BEEP]";
+        status.style.color = "var(--lime)";
+        btnPlayRadio.textContent = "▶ Ouvir Rádio";
+        setTimeout(() => {
+          status.textContent = "[PTT_OFFLINE]";
+          status.style.color = "var(--muted)";
+        }, 1500);
+      };
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+      status.textContent = "[PTT_OFFLINE]";
+      status.style.color = "var(--muted)";
+      btnPlayRadio.textContent = "▶ Ouvir Rádio";
+    }
+  });
+}
+
+document.getElementById("waitlist-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("form-msg");
+  const btn = document.getElementById("f-enviar");
+  const dados = Object.fromEntries(new FormData(e.target).entries());
+  btn.disabled = true; msg.className = ""; msg.textContent = "enviando...";
+  try {
+    const r = await fetch("https://api.driver-pro.com.br/api/v1/waitlist/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados),
+    });
+    if (r.ok) {
+      msg.className = "ok";
+      msg.textContent = "✓ Vaga anotada! Redirecionando para a criação de conta...";
+      setTimeout(() => {
+        window.location.href = "https://app.driver-pro.com.br/register?email=" + encodeURIComponent(dados.email);
+      }, 1500);
+    } else if (r.status === 429) {
+      msg.className = "erro";
+      msg.textContent = "Muitas tentativas — espera um pouquinho e tenta de novo.";
+      btn.disabled = false;
+    } else {
+      const corpo = await r.json().catch(() => ({}));
+      msg.className = "erro";
+      msg.textContent = corpo.email ? "Confere o e-mail digitado." : "Algo deu errado — tenta de novo.";
+      btn.disabled = false;
+    }
+  } catch {
+    msg.className = "erro";
+    msg.textContent = "Sem conexão com o servidor — tenta de novo já já.";
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

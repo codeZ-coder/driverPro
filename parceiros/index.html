@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DriverPRO — Para quem lidera a canaleta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --asphalt: #090b0f;
+      --panel: #121722;
+      --paper: #f4f0e7;
+      --fog: #a7b0c0;
+      --amber: #ffb300;
+      --green: #38e39f;
+      --blue: #5ab7ff;
+      --red: #ff6b6b;
+      --line: rgba(244, 240, 231, 0.13);
+      --display: "Bebas Neue", Impact, sans-serif;
+      --body: "Manrope", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--asphalt);
+      color: var(--paper);
+      font-family: var(--body);
+    }
+
+    .deck { position: relative; width: 100%; height: 100%; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 1rem;
+      padding: clamp(1.1rem, 3vw, 2.5rem);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px) scale(.988);
+      transition: opacity .4s ease, transform .4s ease;
+      overflow: hidden;
+    }
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse 65% 50% at 8% 0%, rgba(255, 179, 0, .13), transparent 55%),
+        radial-gradient(ellipse 55% 45% at 92% 100%, rgba(56, 227, 159, .07), transparent 55%),
+        linear-gradient(150deg, #090b0f 0%, #111621 58%, #0b0e14 100%);
+    }
+    .slide.is-active { opacity: 1; pointer-events: auto; transform: none; z-index: 2; }
+    .slide--hero::before {
+      background:
+        linear-gradient(100deg, rgba(7, 9, 13, .96) 0%, rgba(7, 9, 13, .74) 52%, rgba(7, 9, 13, .44) 100%),
+        url("https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1920&q=82") center/cover no-repeat;
+    }
+
+    .topbar, .footer {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--fog);
+      font-size: .72rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .brand { color: var(--amber); font-weight: 700; letter-spacing: .2em; }
+    .content {
+      position: relative;
+      z-index: 2;
+      width: min(1180px, 100%);
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: clamp(.8rem, 2.2vh, 1.6rem);
+      min-height: 0;
+    }
+    .eyebrow {
+      color: var(--amber);
+      font-size: .76rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: .025em; }
+    h1 { font-size: clamp(3.5rem, 10vw, 7rem); line-height: .9; max-width: 12ch; }
+    h2 { font-size: clamp(2.5rem, 7vw, 4.8rem); line-height: .95; }
+    h3 { color: var(--amber); font-size: 1.55rem; }
+    .accent { color: var(--amber); }
+    .lede {
+      max-width: 42rem;
+      color: rgba(244, 240, 231, .88);
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 500;
+      line-height: 1.55;
+    }
+    .note { color: var(--fog); font-size: .8rem; line-height: 1.45; }
+
+    .pills { display: flex; flex-wrap: wrap; gap: .55rem; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .5rem .8rem;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      font-size: .78rem;
+      font-weight: 600;
+    }
+    .pill--live { color: var(--green); border-color: rgba(56,227,159,.38); }
+
+    .grid-2, .grid-3, .grid-4 { display: grid; gap: .85rem; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      min-height: 100%;
+      padding: 1.1rem 1.2rem;
+      border: 1px solid var(--line);
+      background: rgba(18, 23, 34, .78);
+      backdrop-filter: blur(8px);
+    }
+    .card p, .card li {
+      color: rgba(244,240,231,.8);
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+    .card ul { display: grid; gap: .42rem; list-style: none; margin-top: .55rem; }
+    .card li::before { content: "→"; color: var(--amber); margin-right: .45rem; }
+    .card--live { border-top: 3px solid var(--green); }
+    .card--risk { border-top: 3px solid var(--red); }
+    .number {
+      display: block;
+      color: var(--amber);
+      font-family: var(--display);
+      font-size: 2.4rem;
+      line-height: 1;
+      margin-bottom: .5rem;
+    }
+
+    .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+    .flow .card { position: relative; }
+    .flow .card:not(:last-child)::after {
+      content: "›";
+      position: absolute;
+      right: -.72rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      color: var(--amber);
+      font-family: var(--display);
+      font-size: 2rem;
+    }
+
+    .shots {
+      display: grid;
+      grid-template-columns: .72fr .72fr 1.4fr;
+      gap: .75rem;
+      min-height: 0;
+      max-height: 58vh;
+    }
+    .shot {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #05070a;
+    }
+    .shot figcaption {
+      padding: .4rem .6rem;
+      color: var(--amber);
+      border-bottom: 1px solid var(--line);
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .shot img { width: 100%; height: 100%; min-height: 0; object-fit: contain; object-position: top; }
+
+    .honesty {
+      padding: .85rem 1rem;
+      border-left: 3px solid var(--amber);
+      background: rgba(255,179,0,.08);
+      color: rgba(244,240,231,.9);
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+    .ask {
+      max-width: 46rem;
+      padding: 1.3rem 1.5rem;
+      border: 1px solid rgba(255,179,0,.4);
+      background: linear-gradient(135deg, rgba(255,179,0,.15), rgba(255,179,0,.03));
+    }
+    .ask p { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 600; line-height: 1.5; }
+
+    .dots { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .dot {
+      width: .5rem;
+      height: .5rem;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(244,240,231,.23);
+      cursor: pointer;
+    }
+    .dot.is-on { background: var(--amber); transform: scale(1.25); }
+    .nav { display: flex; gap: .45rem; }
+    .nav button {
+      padding: .55rem .85rem;
+      color: var(--paper);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      font: 600 .72rem var(--body);
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 20;
+      height: 3px;
+      background: var(--amber);
+      transition: width .3s ease;
+    }
+
+    @media (max-width: 850px) {
+      .grid-3, .grid-4, .flow { grid-template-columns: 1fr 1fr; overflow: auto; }
+      .grid-2 { overflow: auto; }
+      .shots { grid-template-columns: 1fr 1fr; overflow: auto; max-height: 62vh; }
+      .shots .shot:last-child { grid-column: 1 / -1; }
+      .flow .card::after { display: none; }
+    }
+    @media (max-width: 600px) {
+      .grid-2, .grid-3, .grid-4, .flow { grid-template-columns: 1fr; }
+      h1 { max-width: none; }
+    }
+    @media print {
+      html, body { height: auto; overflow: visible; }
+      .slide {
+        position: relative;
+        opacity: 1 !important;
+        pointer-events: auto;
+        transform: none;
+        min-height: 100vh;
+        page-break-after: always;
+      }
+      .progress, .nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <main class="deck" id="deck">
+
+    <!-- 1 CAPA -->
+    <section class="slide slide--hero is-active">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>01 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">Para quem lidera grupo de motoristas</p>
+        <h1>Sua canaleta merece mais que um <span class="accent">grupo de zap</span></h1>
+        <p class="lede">O zap organiza a conversa. A Canaleta do DriverPRO organiza a operação: mapa ao vivo do grupo, rádio no dedo, botão de apoio e o dinheiro de cada motorista no lugar.</p>
+        <div class="pills">
+          <span class="pill pill--live">● App funcionando, de verdade</span>
+          <span class="pill">Grátis para os primeiros grupos</span>
+          <span class="pill">Feito para a praça brasileira</span>
+        </div>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 2 A DOR DE LIDERAR PELO ZAP -->
+    <section class="slide">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>02 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">Você conhece essa rotina</p>
+        <h2>Liderar grupo pelo zap é trabalho dobrado</h2>
+        <div class="grid-3">
+          <article class="card"><span class="number">01</span><h3>Áudio empilhado</h3><p>Aviso importante morre no meio de figurinha e corrente. Quem precisava ouvir, não ouviu.</p></article>
+          <article class="card"><span class="number">02</span><h3>"Cadê você?"</h3><p>Ninguém sabe onde ninguém está. Apoio vira adivinhação: manda localização, printa mapa, liga.</p></article>
+          <article class="card"><span class="number">03</span><h3>Aperto sem botão</h3><p>Na hora do sufoco, motorista não tem tempo de digitar. E o grupo só fica sabendo depois.</p></article>
+        </div>
+        <p class="lede">Você virou administrador de chat. Mas o que a praça precisa é de <strong>operação</strong>.</p>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 3 O QUE O LÍDER GANHA -->
+    <section class="slide">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>03 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">O que muda para você</p>
+        <h2>Sua canaleta com ferramenta de verdade</h2>
+        <div class="grid-4">
+          <article class="card card--live"><h3>Mapa ao vivo</h3><p>Quem do grupo está Online aparece no mapa. Você enxerga sua praça em tempo real.</p></article>
+          <article class="card card--live"><h3>Rádio no dedo</h3><p>Apertou, falou, todo mundo ouviu. PTT como rádio de verdade — sem áudio de 3 minutos.</p></article>
+          <article class="card card--live"><h3>Apoio e pânico</h3><p>Motorista em aperto aperta um botão e o grupo vê onde ele está. Sem digitar nada.</p></article>
+          <article class="card card--live"><h3>Repasse de corrida</h3><p>Cliente particular apareceu e você não pode pegar? Repassa pra quem está perto, dentro do app.</p></article>
+        </div>
+        <p class="note">Tudo acima já está no app hoje — não é promessa de versão futura.</p>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 4 PRINTS -->
+    <section class="slide">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>04 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">Olha ele aí</p>
+        <h2>É assim que sua canaleta fica na tela</h2>
+        <div class="shots">
+          <figure class="shot"><figcaption>App · Canaleta</figcaption><img src="assets/mobile-01-principal.png" alt="Canaleta no app Android: mapa, Online e rádio" /></figure>
+          <figure class="shot"><figcaption>App · Finanças</figcaption><img src="assets/mobile-02-financas.png" alt="Finanças do dia no app Android" /></figure>
+          <figure class="shot"><figcaption>Web · visão do dia</figcaption><img src="assets/web-01-dashboard.png" alt="Painel web DriverPRO" /></figure>
+        </div>
+        <p class="note">Capturas reais do produto em 10/07/2026 — conta limpa de demonstração. A melhor forma de ver é ao vivo, no seu ponto.</p>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 5 O QUE OS MOTORISTAS GANHAM -->
+    <section class="slide">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>05 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">O que seus motoristas ganham</p>
+        <h2>Grupo forte é motorista organizado</h2>
+        <div class="grid-3">
+          <article class="card"><span class="number">1</span><h3>O dia compensou?</h3><p>Ganhos, combustível e gastos num lugar só. No fim do turno, o motorista sabe se rodou no lucro ou no prejuízo.</p></article>
+          <article class="card"><span class="number">2</span><h3>Meta do dia</h3><p>Define a meta, acompanha durante o turno e fecha o dia com número na mão — não no chute.</p></article>
+          <article class="card"><span class="number">3</span><h3>Cliente particular</h3><p>Agenda dos clientes fora dos apps, com repasse dentro da rede quando não der pra atender.</p></article>
+        </div>
+        <p class="lede">Quanto mais o grupo usa, mais forte a canaleta fica — e quem construiu isso foi <strong>você</strong>.</p>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 6 COMO COMEÇA -->
+    <section class="slide">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>06 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">Como começa</p>
+        <h2>Três passos e o grupo está no mapa</h2>
+        <div class="flow">
+          <article class="card"><span class="number">1</span><h3>Você cria a canaleta</h3><p>Instala o app, cria o grupo e vira o dono dele. Leva minutos.</p></article>
+          <article class="card"><span class="number">2</span><h3>Chama quem confia</h3><p>Convida os parceiros de pista. Só entra quem você deixar entrar.</p></article>
+          <article class="card"><span class="number">3</span><h3>O grupo fica Online</h3><p>Mapa, rádio e apoio funcionando no primeiro dia. A gente acompanha junto no começo.</p></article>
+        </div>
+        <p class="lede">Instalação hoje é por APK direto com a gente — te guiamos no passo a passo, aparelho por aparelho se precisar.</p>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 7 QUEM MANDA É VOCÊ -->
+    <section class="slide">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>07 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">Regras do jogo</p>
+        <h2>Na sua canaleta, quem manda é você</h2>
+        <div class="grid-2">
+          <article class="card"><h3>Seu grupo, suas regras</h3><ul><li>Você decide quem entra e quem sai</li><li>Você define quem pode o quê dentro do grupo</li><li>Grupo fechado — não é rede social aberta</li></ul></article>
+          <article class="card"><h3>Dado do motorista é do motorista</h3><ul><li>Localização só aparece para o próprio grupo, e só com o motorista Online</li><li>Não vendemos dados de ninguém</li><li>Feito seguindo a LGPD, a lei brasileira de proteção de dados</li></ul></article>
+        </div>
+        <div class="honesty">Isso não é conversa de vendedor: o controle de permissões e o isolamento entre grupos estão construídos dentro do sistema. Cada canaleta só enxerga o que é dela.</div>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 8 QUANTO CUSTA -->
+    <section class="slide">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>08 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">Quanto custa</p>
+        <h2>Hoje? Nada. E sem pegadinha.</h2>
+        <div class="grid-3">
+          <article class="card card--live"><h3>Grátis no beta</h3><p>Os primeiros grupos usam tudo sem pagar. Sem cartão, sem fidelidade, sem letra miúda.</p></article>
+          <article class="card"><h3>O que pedimos em troca</h3><p>Uso de verdade por algumas semanas e feedback direto: o que funcionou, o que travou, o que falta.</p></article>
+          <article class="card"><h3>Grupo fundador</h3><p>Quem entra agora ajuda a decidir o que o app vira — e será tratado como fundador quando o plano pago chegar.</p></article>
+        </div>
+        <div class="honesty">Jogo limpo: um dia vai existir plano pago, porque servidor e mapa custam dinheiro. Quem construiu junto vai saber antes e vai ter condição diferenciada.</div>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Próximo</button></div></footer>
+    </section>
+
+    <!-- 9 PRÓXIMO PASSO -->
+    <section class="slide slide--hero">
+      <header class="topbar"><span class="brand">DriverPRO</span><span>09 / 09</span></header>
+      <div class="content">
+        <p class="eyebrow">Próximo passo</p>
+        <h2>Bora colocar sua canaleta no mapa</h2>
+        <div class="ask">
+          <p>Marca uma demonstração ao vivo — no seu ponto, com seu celular. Em meia hora você vê o mapa, o rádio e o botão de apoio funcionando. Se fizer sentido, seu grupo começa na mesma semana.</p>
+        </div>
+        <div class="grid-2">
+          <article class="card"><h3>Quem tá por trás</h3><p>Karlos · fundador do DriverPRO. Contato direto, sem atendente, sem robô.</p></article>
+          <article class="card"><h3>Sem compromisso</h3><p>Viu, testou, não curtiu? Sem problema. A demonstração não te amarra em nada.</p></article>
+        </div>
+        <p class="lede"><span class="accent">driver-pro.com.br</span> · demonstração ao vivo disponível</p>
+      </div>
+      <footer class="footer"><div class="dots"></div><div class="nav"><button data-prev>Anterior</button><button data-next>Início</button></div></footer>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll(".slide")];
+      const progress = document.getElementById("progress");
+      let current = 0;
+
+      function renderDots() {
+        document.querySelectorAll(".dots").forEach((container) => {
+          container.innerHTML = slides.map((_, index) =>
+            `<button class="dot${index === current ? " is-on" : ""}" data-go="${index}" aria-label="Ir ao slide ${index + 1}"></button>`
+          ).join("");
+        });
+      }
+
+      function go(index) {
+        current = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => slide.classList.toggle("is-active", i === current));
+        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        renderDots();
+      }
+
+      document.getElementById("deck").addEventListener("click", (event) => {
+        if (event.target.matches("[data-next]")) go(current + 1);
+        if (event.target.matches("[data-prev]")) go(current - 1);
+        if (event.target.matches("[data-go]")) go(Number(event.target.dataset.go));
+      });
+      window.addEventListener("keydown", (event) => {
+        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) {
+          event.preventDefault();
+          go(current + 1);
+        }
+        if (["ArrowLeft", "ArrowUp", "PageUp"].includes(event.key)) {
+          event.preventDefault();
+          go(current - 1);
+        }
+        if (event.key === "Home") go(0);
+        if (event.key === "End") go(slides.length - 1);
+      });
+
+      let touchX = null;
+      window.addEventListener("touchstart", (event) => {
+        touchX = event.changedTouches[0].screenX;
+      }, { passive: true });
+      window.addEventListener("touchend", (event) => {
+        if (touchX === null) return;
+        const delta = event.changedTouches[0].screenX - touchX;
+        if (Math.abs(delta) > 50) go(current + (delta < 0 ? 1 : -1));
+        touchX = null;
+      }, { passive: true });
+
+      go(0);
+    })();
+  </script>
+</body>
+</html>
